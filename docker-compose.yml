@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: scout
+      POSTGRES_PASSWORD: scoutpass
+      POSTGRES_DB: scoutdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  data-backend:
+    build: ./data-backend
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://scout:scoutpass@db:5432/scoutdb
+    command: ["python", "main.py"]
+
+  api-backend:
+    build: ./api-backend
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://scout:scoutpass@db:5432/scoutdb
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-rust
+
+volumes:
+  pgdata:
