@@ -7,7 +7,7 @@ url = f"https://open.faceit.com/data/v4/championships?game=cs2&limit=10&offset=1
 # Send HTTP GET request
 headers = {
     "User-Agent": "Mozilla/5.0",
-    
+    "Authorization": "--"
     
 }
 response = requests.get(url, headers=headers)
